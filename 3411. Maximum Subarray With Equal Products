@@ -1,0 +1,75 @@
+//Bruteforce
+class Solution {
+public:
+   int gcd(int a, int b) {
+        return __gcd(a, b);
+    }
+
+    int lcm(int a, int b) {
+        return a * b / gcd(a, b);
+    }
+
+    long long product(const vector<int>& arr) {
+         long long prod = 1;
+        for (int num : arr) {
+            if (prod > LLONG_MAX / num) {
+                return LLONG_MAX; 
+            }
+            prod *= num;
+        }
+        
+        return prod;
+    }
+
+    bool isProductEquivalent(const vector<int>& subarray) {
+         long long prod = product(subarray);
+        int gcd_value = subarray[0];
+        int lcm_value = subarray[0];
+        
+        for (int num : subarray) {
+            gcd_value = gcd(gcd_value, num);
+            lcm_value = lcm(lcm_value, num);
+        }
+        
+         if (prod == LLONG_MAX) {
+            return false;  // If overflow happened, it's not valid
+        }
+        
+        return prod == lcm_value * gcd_value;
+    }
+
+    // Main function to find the longest product equivalent subarray
+    int maxLength(vector<int>& nums) {
+        int n = nums.size();
+        int max_length = 0;
+        
+        // Try every possible subarray
+        for (int i = 0; i < n; ++i) {
+            for (int j = i; j < n; ++j) {
+                vector<int> subarray(nums.begin() + i, nums.begin() + j + 1);
+                if (isProductEquivalent(subarray)) {
+                    max_length = max(max_length, j - i + 1);
+                }
+            }
+        }
+        
+        return max_length;
+    }
+};
+
+
+//shorter bruteforce
+int maxLength(vector<int>& nums) {
+    int ans = 0;
+    for(int i = 0; i < nums.size(); ++i){
+        long long gcdVal = nums[i], lcmVal = nums[i], prod = 1, maxLcm = 100000000000;
+        for(int j = i; j < nums.size(); ++j){
+            prod = prod*(long long)nums[j];
+            if(prod > maxLcm) break;
+            gcdVal = gcd(gcdVal, (long long)nums[j]);
+            lcmVal = lcm(lcmVal, (long long)nums[j]);
+            if(prod == gcdVal * lcmVal) ans = max(ans, j - i + 1);
+        }
+    }
+    return ans;
+}
