@@ -1,0 +1,23 @@
+class Solution {
+public:
+    long long calculateScore(string s) {
+       long long res = 0;
+       unordered_map<int,vector<int>>mp;
+       for(int i = 0; i < s.size(); i++)
+       {
+            int chartoint = s[i] - 'a';
+            int mirrorval = 25 - chartoint;
+            if(mp.find(mirrorval) != mp.end() && mp[mirrorval].size()>0)
+            {
+                res = res + (long long)i - mp[mirrorval].back();
+                mp[mirrorval].pop_back();
+            }else{
+                mp[chartoint].push_back(i);
+            }
+
+       } 
+       return res;
+    }
+};
+
+
